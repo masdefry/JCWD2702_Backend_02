@@ -30,6 +30,7 @@ const express_1 = __importStar(require("express"));
 // Define Router
 const router = (0, express_1.Router)();
 router.use(express_1.default.json()); // Body Parser
+router.use('*/image', express_1.default.static('src/public/image'));
 // Import Admin Router
 const EmployeeRouter_1 = __importDefault(require("./EmployeeRouter"));
 const HRRouter_1 = __importDefault(require("./HRRouter"));

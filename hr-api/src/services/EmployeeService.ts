@@ -88,13 +88,13 @@ export const findShift = async() => {
     return await prisma.shift.findMany()
 }
 
-export const createProfileAndImagesProfile = async(data: any, images: any) => {
+export const createProfileAndImagesProfile = async(data: any, images: any, uid: any) => {
     return await prisma.$transaction(async (tx) => {
         const createdEmployeeProfile = await tx.employeeProfile.create({
             data: {
                 birthDate: new Date(data.birthDate), 
                 address: data.address, 
-                employeeId: 'clves7ihh000311zv85muzmze'
+                employeeId: uid
             }
         })
     

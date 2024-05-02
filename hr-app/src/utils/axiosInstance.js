@@ -16,7 +16,6 @@ axiosInstance.interceptors.request.use(
         return request
     }, 
     error => {
-        console.log('>>>ERROR')
         console.log(error)
     } 
 )

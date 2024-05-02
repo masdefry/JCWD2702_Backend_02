@@ -85,13 +85,13 @@ const findShift = () => __awaiter(void 0, void 0, void 0, function* () {
     return yield connection_1.prisma.shift.findMany();
 });
 exports.findShift = findShift;
-const createProfileAndImagesProfile = (data, images) => __awaiter(void 0, void 0, void 0, function* () {
+const createProfileAndImagesProfile = (data, images, uid) => __awaiter(void 0, void 0, void 0, function* () {
     return yield connection_1.prisma.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
         const createdEmployeeProfile = yield tx.employeeProfile.create({
             data: {
                 birthDate: new Date(data.birthDate),
                 address: data.address,
-                employeeId: 'clves7ihh000311zv85muzmze'
+                employeeId: uid
             }
         });
         const imagesToCreate = [];

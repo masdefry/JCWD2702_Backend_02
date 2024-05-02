@@ -13,7 +13,8 @@ export const useAuthLogin = () => {
             setCookie(res.data.data.accessToken)
             alert(res.data.message)
             dispatch(setUser({
-                fullname: res.data.data.fullname
+                fullname: res.data.data.fullname, 
+                imageUrl: res.data.data.imageUrl
             }))
             router.push('/')
         }, 

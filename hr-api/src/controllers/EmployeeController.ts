@@ -14,7 +14,7 @@ import { DeletedUploadedFiles } from '../helpers/DeletedUploadedFiles';
 
 export const clockin = async(req: Request, res: Response, next: NextFunction): Promise<void> => {
    try {
-    const reqToken = req as IReqAccessToken
+        const reqToken = req as IReqAccessToken
         const {uid} = reqToken.payload
         
         const {createdAttendance} = await createAttendanceClockin({uid})
@@ -94,11 +94,13 @@ export const employeeShift = async(req: Request, res: Response, next: NextFuncti
 export const createProfile = async(req: Request, res: Response, next: NextFunction) => {
     try {
         const data = JSON.parse(req.body.bebas) // {address, birthdate}
+        const reqToken = req as IReqAccessToken
+        const {uid} = reqToken.payload
 
         if(req.files){
             const uploadedFiles = Array.isArray(req.files) ? req.files : req.files['images'];
 
-            await createProfileAndImagesProfile(data, uploadedFiles)
+            await createProfileAndImagesProfile(data, uploadedFiles, uid)
         }
 
         res.status(201).send({

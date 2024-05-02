@@ -91,9 +91,11 @@ exports.employeeShift = employeeShift;
 const createProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = JSON.parse(req.body.bebas); // {address, birthdate}
+        const reqToken = req;
+        const { uid } = reqToken.payload;
         if (req.files) {
             const uploadedFiles = Array.isArray(req.files) ? req.files : req.files['images'];
-            yield (0, EmployeeService_1.createProfileAndImagesProfile)(data, uploadedFiles);
+            yield (0, EmployeeService_1.createProfileAndImagesProfile)(data, uploadedFiles, uid);
         }
         res.status(201).send({
             error: false,

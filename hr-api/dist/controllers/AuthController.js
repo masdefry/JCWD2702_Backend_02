@@ -14,6 +14,7 @@ const AuthService_1 = require("../services/AuthService");
 const Hashing_1 = require("../helpers/Hashing");
 const Token_1 = require("../helpers/Token");
 const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
         const { email, password } = req.body;
         const findEmployeeByEmailResult = yield (0, AuthService_1.findEmployeeByEmail)({ email });
@@ -29,7 +30,8 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
             message: 'Login Success',
             data: {
                 accessToken,
-                fullname: findEmployeeByEmailResult.fullname
+                fullname: findEmployeeByEmailResult.fullname,
+                imageUrl: (_a = findEmployeeByEmailResult.employeeprofile) === null || _a === void 0 ? void 0 : _a.employeeimagesprofile[0].url
             }
         });
     }

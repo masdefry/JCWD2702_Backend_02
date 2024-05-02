@@ -5,6 +5,13 @@ export const findEmployeeByEmail = async({email}: IFindEmployeeByEmailParams) =>
     const findEmployee = await prisma.employee.findFirst({
         where: {
             email
+        }, 
+        include: {
+            employeeprofile: {
+                include: {
+                    employeeimagesprofile: true
+                }
+            }
         }
     })
 

@@ -14,6 +14,6 @@ router.put('/clockout/:attendanceId', tokenVerify, clockout)
 router.post('/leave-request', tokenVerify, leaveRequest)
 router.get('/position', employeePosition)
 router.get('/shift', employeeShift)
-router.post('/profile', uploader, createProfile)
+router.post('/profile', tokenVerify, uploader, createProfile)
 
 export default router

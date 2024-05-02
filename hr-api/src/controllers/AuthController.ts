@@ -23,7 +23,8 @@ export const login = async(req: Request, res: Response, next: NextFunction) => {
             message: 'Login Success', 
             data: {
                 accessToken, 
-                fullname: findEmployeeByEmailResult.fullname
+                fullname: findEmployeeByEmailResult.fullname, 
+                imageUrl: findEmployeeByEmailResult.employeeprofile?.employeeimagesprofile[0].url
             }
         })
     } catch (error) {

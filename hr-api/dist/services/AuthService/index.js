@@ -15,6 +15,13 @@ const findEmployeeByEmail = ({ email }) => __awaiter(void 0, void 0, void 0, fun
     const findEmployee = yield connection_1.prisma.employee.findFirst({
         where: {
             email
+        },
+        include: {
+            employeeprofile: {
+                include: {
+                    employeeimagesprofile: true
+                }
+            }
         }
     });
     if (!findEmployee)
