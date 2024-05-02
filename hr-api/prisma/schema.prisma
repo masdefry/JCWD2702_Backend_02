@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Employee{
+  uid   String @id @default(cuid())
+  email String 
+  fullname  String 
+  password  String 
+  position Position @relation(fields: [positionId], references: [id])
+  positionId  Int 
+  shift Shift @relation(fields: [shiftId], references: [id])
+  shiftId     Int  
+  leaveBalance Int @default(12)
+  address     String 
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt 
+  deletedAt DateTime?
+  employeeprofile EmployeeProfile?
+  
+  attendance Attendance[]
+  leaveRequest LeaveRequest[]
+  monthlyPayroll MonthlyPayroll[]
+}
+
+model EmployeeProfile{
+  id  Int @id @default(autoincrement())
+  birthDate DateTime @db.Date()
+  address String
+  employee Employee @relation(fields: [employeeId], references: [uid])
+  employeeId  String @unique
+
+  employeeimagesprofile EmployeeImagesProfile[]
+}
+
+model EmployeeImagesProfile{
+  id  Int @id @default(autoincrement())
+  url String 
+  employeeprofile EmployeeProfile @relation(fields: [employeeProfileId], references: [id])
+  employeeProfileId  Int 
+}
+
+model Position{
+  id    Int   @id @default(autoincrement())
+  name  String 
+  salary  Int 
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt 
+  deletedAt DateTime?
+
+  employee Employee[]
+}
+
+model Shift{
+  id  Int @id @default(autoincrement())
+  start DateTime @db.Time()
+  end   DateTime @db.Time()
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt 
+  deletedAt DateTime?
+
+  employee Employee[]
+}
+
+model Attendance{
+  id  Int @id @default(autoincrement())
+  date  DateTime @db.Date
+  clockin DateTime @db.Time() 
+  clockout DateTime? @db.Time()
+  employee Employee @relation(fields: [employeeId], references: [uid])
+  employeeId  String 
+  deduction   Int
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt 
+  deletedAt DateTime?
+}
+
+model LeaveRequest{
+  id Int @id @default(autoincrement())
+  stardDate DateTime @db.Date
+  endDate DateTime @db.Date
+  status  LeaveRequestStatus @default(PENDING)
+  employee Employee @relation(fields: [employeeId], references: [uid])
+  employeeId String
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt 
+  deletedAt DateTime?
+}
+
+enum LeaveRequestStatus{
+  APPROVED
+  REJECTED
+  PENDING
+}
+
+model MonthlyPayroll{
+  id Int @id @default(autoincrement())
+  date  DateTime @db.Date
+  employee Employee @relation(fields: [employeeId], references: [uid])
+  employeeId String 
+  totalDeduction Int 
+  finalSalary Int 
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt 
+  deletedAt DateTime?
+}
