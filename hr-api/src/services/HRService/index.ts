@@ -67,7 +67,7 @@ export const updateLeaveRequest = async({id}: {id: number}) => {
 }
 
 export const createEmployee = async({email, fullname, password, positionId, shiftId, address}: ICreateEmployeeParams) => {
-    await prisma.employee.create({
+    return await prisma.employee.create({
         data: {
             email, fullname, password, positionId, shiftId, address
         }

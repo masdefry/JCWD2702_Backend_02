@@ -9,10 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = void 0;
+exports.sendMail = exports.login = void 0;
 const AuthService_1 = require("../services/AuthService");
 const Hashing_1 = require("../helpers/Hashing");
 const Token_1 = require("../helpers/Token");
+const TransporterMailer_1 = require("../helpers/TransporterMailer");
 const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
@@ -40,3 +41,26 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.login = login;
+const sendMail = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield TransporterMailer_1.TransporterMailer.sendMail({
+            from: 'HR-APP',
+            to: 'ditonatael@gmail.com',
+            subject: 'Welcome',
+            html: '<h1>Welcome</h1>'
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.sendMail = sendMail;
+/*
+    HR Create Employee
+    v
+    Ketika HR create akun employee, status akun masih belum aktif
+    v
+    Employee harus melakukan email verification yang terkirim saat HR create akun
+    v
+    Ketika klik link email verification, status akun akan ter-aktivasi
+*/ 

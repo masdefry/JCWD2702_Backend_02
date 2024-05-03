@@ -4,8 +4,9 @@ import { Router } from 'express';
 const router = Router()
 
 // Import Controller
-import {login} from '../controllers/AuthController';
+import {login, sendMail} from '../controllers/AuthController';
 
 router.post('/login', login)
+router.post('/send-mail', sendMail)
 
 export default router

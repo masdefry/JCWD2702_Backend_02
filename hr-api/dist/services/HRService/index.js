@@ -70,7 +70,7 @@ const updateLeaveRequest = ({ id }) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.updateLeaveRequest = updateLeaveRequest;
 const createEmployee = ({ email, fullname, password, positionId, shiftId, address }) => __awaiter(void 0, void 0, void 0, function* () {
-    yield connection_1.prisma.employee.create({
+    return yield connection_1.prisma.employee.create({
         data: {
             email, fullname, password, positionId, shiftId, address
         }
