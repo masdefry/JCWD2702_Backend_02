@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createProfile = exports.employeeShift = exports.employeePosition = exports.leaveRequest = exports.clockout = exports.clockin = void 0;
+exports.updateProfile = exports.createProfile = exports.employeeShift = exports.employeePosition = exports.leaveRequest = exports.clockout = exports.clockin = void 0;
 const EmployeeService_1 = require("../services/EmployeeService");
 const DeletedUploadedFiles_1 = require("../helpers/DeletedUploadedFiles");
 const clockin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -91,8 +91,8 @@ exports.employeeShift = employeeShift;
 const createProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = JSON.parse(req.body.bebas); // {address, birthdate}
-        const reqToken = req;
-        const { uid } = reqToken.payload;
+        const reqPayload = req;
+        const { uid } = reqPayload.payload;
         if (req.files) {
             const uploadedFiles = Array.isArray(req.files) ? req.files : req.files['images'];
             yield (0, EmployeeService_1.createProfileAndImagesProfile)(data, uploadedFiles, uid);
@@ -109,3 +109,26 @@ const createProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.createProfile = createProfile;
+const updateProfile = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // accesstoken, new data(address, birthDate, new image)
+        const { payload } = req;
+        const data = JSON.parse(req.body.bebas);
+        let uploadedFiles;
+        if (req.files) {
+            uploadedFiles = Array.isArray(req.files) ? req.files : req.files['images'];
+        }
+        const employeeImagesProfileToDelete = yield (0, EmployeeService_1.updateProfileAndImagesProfile)(data, uploadedFiles, payload.uid);
+        (0, DeletedUploadedFiles_1.DeletedUploadedFiles)({ images: employeeImagesProfileToDelete });
+        res.status(201).send({
+            error: false,
+            message: 'Update Profile Success!',
+            data: null
+        });
+    }
+    catch (error) {
+        next(error);
+        console.log(error);
+    }
+});
+exports.updateProfile = updateProfile;

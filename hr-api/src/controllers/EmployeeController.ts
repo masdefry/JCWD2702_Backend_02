@@ -6,7 +6,8 @@ import {
     createLeaveRequest, 
     createProfileAndImagesProfile, 
     findPosition, 
-    findShift
+    findShift, 
+    updateProfileAndImagesProfile
 } from '../services/EmployeeService';
 
 import { IReqAccessToken } from '../helpers/Token';
@@ -94,8 +95,8 @@ export const employeeShift = async(req: Request, res: Response, next: NextFuncti
 export const createProfile = async(req: Request, res: Response, next: NextFunction) => {
     try {
         const data = JSON.parse(req.body.bebas) // {address, birthdate}
-        const reqToken = req as IReqAccessToken
-        const {uid} = reqToken.payload
+        const reqPayload = req as IReqAccessToken
+        const {uid} = reqPayload.payload
 
         if(req.files){
             const uploadedFiles = Array.isArray(req.files) ? req.files : req.files['images'];
@@ -112,5 +113,30 @@ export const createProfile = async(req: Request, res: Response, next: NextFuncti
         DeletedUploadedFiles(req.files)
         
         next(error)
+    }
+}
+
+export const updateProfile = async(req: Request, res: Response, next: NextFunction) => {
+    try {
+        // accesstoken, new data(address, birthDate, new image)
+        const {payload} = req as IReqAccessToken
+        const data = JSON.parse(req.body.bebas)
+        let uploadedFiles
+        if(req.files){
+            uploadedFiles = Array.isArray(req.files) ? req.files : req.files['images'];
+        }
+
+        const employeeImagesProfileToDelete = await updateProfileAndImagesProfile(data, uploadedFiles, payload.uid)
+   
+        DeletedUploadedFiles({images: employeeImagesProfileToDelete})
+
+        res.status(201).send({
+            error: false, 
+            message: 'Update Profile Success!', 
+            data: null
+        })
+    } catch (error) {
+        next(error)
+        console.log(error)
     }
 }

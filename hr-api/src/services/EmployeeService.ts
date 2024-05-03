@@ -104,10 +104,58 @@ export const createProfileAndImagesProfile = async(data: any, images: any, uid: 
                 url: item.path, 
                 employeeProfileId: createdEmployeeProfile.id 
             })
-        })
+        })  
         
         await tx.employeeImagesProfile.createMany({
             data: [...imagesToCreate]
         })
+    })
+}
+
+export const updateProfileAndImagesProfile = async(data: any, images: any, uid: any) => {
+    return await prisma.$transaction(async (tx) => {
+        const findEmployeeProfile = await tx.employeeProfile.findUnique({
+            where: {
+                employeeId: uid 
+            }
+        })
+        
+        if(!findEmployeeProfile) throw {message: 'No Profile Created!'}
+
+        await tx.employeeProfile.update({
+            data: {
+                birthDate: new Date(data.birthDate), 
+                address: data.address
+            }, 
+            where: {
+                employeeId: uid 
+            }
+        })
+
+        const findEmployeeImagesProfile = await tx.employeeImagesProfile.findMany({
+            where: {
+                employeeProfileId: findEmployeeProfile.id
+            }
+        })
+
+        const imagesToCreate: any = []
+        images.forEach((item: any) => {
+            imagesToCreate.push({
+                url: item.path, 
+                employeeProfileId: findEmployeeProfile.id 
+            })
+        })
+
+        await tx.employeeImagesProfile.deleteMany({
+            where: {
+                employeeProfileId: findEmployeeProfile.id
+            }
+        })
+
+        await tx.employeeImagesProfile.createMany({
+            data: [...imagesToCreate]
+        })
+
+        return findEmployeeImagesProfile
     })
 }

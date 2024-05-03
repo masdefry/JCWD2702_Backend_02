@@ -6,7 +6,8 @@ export const DeletedUploadedFiles = (files: any) => {
         
         if(Array.isArray(uploadedFiles)){
             uploadedFiles?.forEach(item => {
-                rmSync(item.path)
+                if(item.path) rmSync(item.path)
+                if(item.url) rmSync(item.url)
             })
         }
     }

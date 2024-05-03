@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createProfileAndImagesProfile = exports.findShift = exports.findPosition = exports.createLeaveRequest = exports.createAttendanceClockout = exports.createAttendanceClockin = void 0;
+exports.updateProfileAndImagesProfile = exports.createProfileAndImagesProfile = exports.findShift = exports.findPosition = exports.createLeaveRequest = exports.createAttendanceClockout = exports.createAttendanceClockin = void 0;
 const connection_1 = require("./../connection");
 const date_fns_1 = require("date-fns");
 const createAttendanceClockin = ({ uid }) => __awaiter(void 0, void 0, void 0, function* () {
@@ -107,3 +107,45 @@ const createProfileAndImagesProfile = (data, images, uid) => __awaiter(void 0, v
     }));
 });
 exports.createProfileAndImagesProfile = createProfileAndImagesProfile;
+const updateProfileAndImagesProfile = (data, images, uid) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield connection_1.prisma.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
+        const findEmployeeProfile = yield tx.employeeProfile.findUnique({
+            where: {
+                employeeId: uid
+            }
+        });
+        if (!findEmployeeProfile)
+            throw { message: 'No Profile Created!' };
+        yield tx.employeeProfile.update({
+            data: {
+                birthDate: new Date(data.birthDate),
+                address: data.address
+            },
+            where: {
+                employeeId: uid
+            }
+        });
+        const findEmployeeImagesProfile = yield tx.employeeImagesProfile.findMany({
+            where: {
+                employeeProfileId: findEmployeeProfile.id
+            }
+        });
+        const imagesToCreate = [];
+        images.forEach((item) => {
+            imagesToCreate.push({
+                url: item.path,
+                employeeProfileId: findEmployeeProfile.id
+            });
+        });
+        yield tx.employeeImagesProfile.deleteMany({
+            where: {
+                employeeProfileId: findEmployeeProfile.id
+            }
+        });
+        yield tx.employeeImagesProfile.createMany({
+            data: [...imagesToCreate]
+        });
+        return findEmployeeImagesProfile;
+    }));
+});
+exports.updateProfileAndImagesProfile = updateProfileAndImagesProfile;

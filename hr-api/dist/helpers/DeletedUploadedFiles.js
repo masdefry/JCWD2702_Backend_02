@@ -7,7 +7,10 @@ const DeletedUploadedFiles = (files) => {
         const uploadedFiles = Array.isArray(files) ? files : files['images'];
         if (Array.isArray(uploadedFiles)) {
             uploadedFiles === null || uploadedFiles === void 0 ? void 0 : uploadedFiles.forEach(item => {
-                (0, fs_1.rmSync)(item.path);
+                if (item.path)
+                    (0, fs_1.rmSync)(item.path);
+                if (item.url)
+                    (0, fs_1.rmSync)(item.url);
             });
         }
     }
