@@ -1,0 +1,29 @@
+version: '2'
+
+networks:
+  hr-api-network:
+    name: hr-api-network 
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile 
+    ports: 
+      - "5002:5002"
+    # volumes:
+    #   -.:/app 
+    #   -"/app/node_modules"
+    depends_on:
+      - mysql-server 
+    networks:
+      - hr-api-network 
+
+  mysql-server:
+    image: mysql:latest 
+    environment: 
+      - MYSQL_DATABASE=test 
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=abc12345
+    networks:
+      - hr-api-network

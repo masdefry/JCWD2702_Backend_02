@@ -4,7 +4,7 @@ import cors from 'cors';
 const app: Express = express();
 app.use(cors())
 
-const port: number = 5001;
+const port: number = 5002;
 
 // Import index.ts /routers
 import routers from './routers'; // Menunjuk index.ts
